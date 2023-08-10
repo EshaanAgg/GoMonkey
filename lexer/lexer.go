@@ -21,7 +21,7 @@ func New(input string) *Lexer {
 // Read the character at the current position and store the same in the Lexer
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
-		l.ch = 0 // 0 in ASCII represents NUL which denotes either the EOF or the fact that we haven't read anything
+		l.ch = 0 // 0 in ASCII represents NULL which denotes either the EOF or the fact that we haven't read anything
 	} else {
 		l.ch = l.input[l.readPosition]
 	}
@@ -30,12 +30,36 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isValidIdentifierCharacter(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
+}
+
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
+	l.skipWhitespace()
+
 	switch l.ch {
 
-	// Add all the operators
+	// Operators
 	case '=':
 		tok = token.NewToken(token.ASSIGN, l.ch)
 	case '+':
@@ -63,13 +87,21 @@ func (l *Lexer) NextToken() token.Token {
 	case '}':
 		tok = token.NewToken(token.RBRACE, l.ch)
 
-	// EOF
+	// End of File
 	case 0:
-		tok.Literal = ""
-		tok.Type = token.EOF
+		tok = token.Token{Type: token.EOF, Literal: ""}
 
 	default:
-		tok = token.NewToken(token.ILLEGAL, l.ch)
+		if isLetter(l.ch) {
+			identifier := l.readIdentifier()
+			tok = token.Token{Type: getKeyword(identifier), Literal: identifier}
+			return tok
+		} else if isDigit(l.ch) {
+			tok = token.Token{Type: token.INT, Literal: l.readNumber()}
+			return tok
+		} else {
+			tok = token.NewToken(token.ILLEGAL, l.ch)
+		}
 	}
 
 	l.readChar()
