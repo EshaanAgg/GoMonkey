@@ -10,9 +10,12 @@ This is an custom interpreter of the popular Monkey Language, made popualar by T
 - Subtraction (-)
 - Multipliction (\*)
 - Division (/)
+- Exponentiation (\*\*)
 - Remainder (%)
 - Bracketing ((), {})
 - Semicolon `;` and Comma `,`
+- Basic Arithmetic Comparision Operators (`>`, `>=`, `<`, `<=`, `==`)
+- Negation (`!`, `!=`)
 
 #### Language Specifications
 

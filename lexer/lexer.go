@@ -30,6 +30,14 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isValidIdentifierCharacter(l.ch) {
@@ -61,17 +69,47 @@ func (l *Lexer) NextToken() token.Token {
 
 	// Operators
 	case '=':
-		tok = token.NewToken(token.ASSIGN, l.ch)
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.EQUALS, Literal: "=="}
+			l.readChar()
+		} else {
+			tok = token.NewToken(token.ASSIGN, l.ch)
+		}
+
 	case '+':
 		tok = token.NewToken(token.PLUS, l.ch)
 	case '-':
 		tok = token.NewToken(token.MINUS, l.ch)
 	case '*':
-		tok = token.NewToken(token.MULTIPLY, l.ch)
+		tok = token.NewToken(token.ASTERISK, l.ch)
 	case '/':
-		tok = token.NewToken(token.DIVIDE, l.ch)
+		tok = token.NewToken(token.SLASH, l.ch)
 	case '%':
 		tok = token.NewToken(token.MOD, l.ch)
+
+	case '>':
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.GTE, Literal: ">="}
+			l.readChar()
+		} else {
+			tok = token.NewToken(token.GT, l.ch)
+		}
+
+	case '<':
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.LTE, Literal: "<="}
+			l.readChar()
+		} else {
+			tok = token.NewToken(token.LT, l.ch)
+		}
+
+	case '!':
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.NOTEQUALS, Literal: "!="}
+			l.readChar()
+		} else {
+			tok = token.NewToken(token.NOT, l.ch)
+		}
 
 	// Delimeters
 	case ';':

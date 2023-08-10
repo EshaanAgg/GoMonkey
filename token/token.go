@@ -9,13 +9,22 @@ const (
 	IDENTIFIER = "IDENTIFIER" // add, foobar, x, y, ...
 	INT        = "INT"        // 1343456
 
-	// Operators
+	// Mathematical Operators
 	ASSIGN   = "="
 	PLUS     = "+"
 	MINUS    = "-"
-	MULTIPLY = "*"
-	DIVIDE   = "/"
+	ASTERISK = "*"
+	SLASH    = "/"
 	MOD      = "%"
+
+	// Logical Operators
+	EQUALS    = "=="
+	NOT       = "!"
+	NOTEQUALS = "!="
+	GT        = ">"
+	GTE       = ">="
+	LT        = "<"
+	LTE       = "<="
 
 	// Delimiters
 	COMMA     = ","
@@ -28,6 +37,11 @@ const (
 	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+	TRUE     = "true"
+	FALSE    = "false"
+	IF       = "if"
+	ELSE     = "else"
+	RETURN   = "return"
 )
 
 type Token struct {

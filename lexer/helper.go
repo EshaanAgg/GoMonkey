@@ -15,8 +15,13 @@ func isValidIdentifierCharacter(ch byte) bool {
 }
 
 var keywords = map[string]token.TokenType{
-	"fn":  token.FUNCTION,
-	"let": token.LET,
+	"fn":     token.FUNCTION,
+	"let":    token.LET,
+	"true":   token.TRUE,
+	"false":  token.FALSE,
+	"return": token.RETURN,
+	"if":     token.IF,
+	"else":   token.ELSE,
 }
 
 func getKeyword(key string) token.TokenType {
